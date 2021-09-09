@@ -1,0 +1,92 @@
+<html lang="eng"
+      xmlns="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<header th:fragment="header(activeTab)">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <a class="navbar-brand mr-4" href="#">Task Manager</a>
+        <button aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarColor01" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+
+                <!--Home-->
+                <li th:class="${activeTab == 'home'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+
+                <!--Home-->
+                <li th:class="${activeTab == 'projects-list'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/projects">Projects List</a>
+                </li>
+
+                <li th:class="${activeTab == 'projects-new'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/projects/create">New Project</a>
+                </li>
+
+                <!--Tasks list-->
+                <li sec:authorize="isAuthenticated()"
+                    th:class="${activeTab == 'tasks-list'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/tasks">Tasks List</a>
+                </li>
+
+                <!--Assign tasks-->
+                <li sec:authorize="hasRole('ROLE_ADMIN')"
+                    th:class="${activeTab == 'assign-tasks'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/assignment">Assign Tasks</a>
+                </li>
+
+                <!--Create New Task-->
+                <li sec:authorize="isAuthenticated()"
+                    th:class="${activeTab == 'create-new-task'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/task/create">Create New Task</a>
+                </li>
+
+                <!--Users List-->
+                <li sec:authorize="isAuthenticated()"
+                    th:class="${activeTab == 'users-list'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/users">Users List</a>
+                </li>
+
+                <!--Profile-->
+                <li sec:authorize="isAuthenticated()"
+                    th:class="${activeTab == 'profile'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/profile">Your Profile</a>
+                </li>
+
+                <!--About-->
+                <li th:class="${activeTab == 'about'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/about">About</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="/profile" sec:authentication="name"></a>
+                </li>
+                <li sec:authorize="!isAuthenticated()"
+                    th:class="${activeTab == 'register'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/register">Register</a>
+                </li>
+                <li sec:authorize="!isAuthenticated()"
+                    th:class="${activeTab == 'login'}? 'active nav-item mr-4' : 'nav-item mr-4'">
+                    <a class="nav-link" href="/login">Login</a>
+                </li>
+                <li>
+                    <form class="form-inline my-2 my-lg-0"
+                          method="post" sec:authorize="isAuthenticated()"
+                          th:action="@{logout}">
+                        <button class="btn btn-secondary my-2 my-sm-0 mr-4" type="submit">Log out</button>
+                    </form>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+
+</header>
+</html>

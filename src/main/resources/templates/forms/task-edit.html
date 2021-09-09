@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
+    <title>Edit Task</title>
+</head>
+
+<body>
+
+<header>
+    <!--/*/ <th:block th:include="fragments/header :: header('create-new-task')"></th:block> /*/-->
+</header>
+
+<main class="container">
+    <div class="card mb-3">
+
+        <h1 class="my-highest-header card-header">Edit Task</h1>
+
+        <div class="card card-body">
+
+            <form method="post" th:action="@{'/task/edit/'+ ${task.id}}" th:object="${task}">
+                <input th:field="*{id}" type="hidden"/>
+
+                <!--name-->
+                <div class="form-group">
+                    <label class="form-control-label" for="name">Task name</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-pen"></i></span>
+                        </div>
+                        <input class="form-control" id="name"
+                               th:field="*{name}" type="text"/>
+                    </div>
+                    <div class="text text-danger"
+                         th:errors="*{name}" th:if="${#fields.hasErrors('name')}">
+
+                    </div>
+                </div>
+
+                <!--description-->
+                <div class="form-group">
+                    <label class="form-control-label" for="description">Task description</label>
+                    <textarea class="form-control"
+                              id="description" th:field="*{description}">  </textarea>
+                    <div class="text text-danger"
+                         th:errors="*{description}" th:if="${#fields.hasErrors('description')}">
+
+                    </div>
+                </div>
+
+                <!--date-->
+                <div class="form-group">
+                    <label class="form-control-label" for="date">Date</label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        </div>
+                        <input class="form-control" id="date"
+                               th:attr="value=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')},
+                                    min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                               th:field="*{date}" type="date"/>
+                    </div>
+                    <div class="text text-danger"
+                         th:errors="*{date}" th:if="${#fields.hasErrors('date')}">
+
+                    </div>
+                </div>
+
+                <input class="btn btn-primary" type="submit" value="Submit"/>
+                <button class="btn btn-outline-primary pull-right ml-3" type="reset">Reset</button>
+                <a class="btn btn-outline-primary pull-right ml-3" href="/tasks" type="reset">Cancel</a>
+            </form>
+        </div>
+    </div>
+</main>
+
+
+<footer class="footer">
+    <!--/*/ <th:block th:include="fragments/footer :: footer"></th:block> /*/-->
+</footer>
+
+</body>
+</html>

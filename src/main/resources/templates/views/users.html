@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/head :: head"></th:block> /*/-->
+    <title>Users List</title>
+</head>
+
+<body>
+
+<header>
+    <!--/*/ <th:block th:include="fragments/header :: header('users-list')"></th:block> /*/-->
+</header>
+
+<main class="container">
+    <div class="card mb-3">
+
+        <h1 class="my-highest-header card-header">Users List</h1>
+
+        <div class="card card-body">
+            <table class="table table-hover text-left">
+
+                <thead class="table-info">
+                <tr>
+                    <th>Name</th>
+                    <th class="d-none d-lg-table-cell">Email</th>
+                    <th>Tasks in progress</th>
+                    <th class="d-none d-md-table-cell">Tasks completed</th>
+                    <th th:if="${isAdminSigned}">Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="user:${users}">
+
+                    <!--Photo & name-->
+                    <td>
+                        <img alt="user photo" class="embed-responsive embed-responsive-3by4 d-inline my-photo-miniature"
+                             th:src="${user.photo}"/>
+                        <div class=" d-inline ml-1" th:text="${user.name}"></div>
+                    </td>
+
+                    <!--Email-->
+                    <td class="d-none d-lg-table-cell" th:text="${user.email}"></td>
+
+                    <!--Tasks in  progress-->
+                    <td th:if="${user.getTasksInProgress().size() gt 0}">
+                        <ol class="pl-3">
+                            <li th:each="t : ${user.getTasksInProgress()}">
+                                <span th:text="${t.name}"></span>
+                                <!--/*/ <th:block th:include="fragments/days-left-until-deadline :: daysLeft(${t})"></th:block> /*/-->
+                            </li>
+                        </ol>
+                    </td>
+                    <td th:if="${user.getTasksInProgress().size()==0}">0</td>
+
+                    <!--Tasks completed-->
+                    <td class="d-none d-md-table-cell" th:if="${user.getTasksCompleted().size() gt 0}">
+                        <ol class="pl-3">
+                            <li th:each="t : ${user.getTasksCompleted()}">
+                                <span th:text="${t.name}"></span>
+                            </li>
+                        </ol>
+                    </td>
+                    <td class="d-none d-md-table-cell" th:if="${user.getTasksCompleted().size()==0}">0</td>
+
+                    <!--Delete button-->
+                    <td th:if="${isAdminSigned and !user.isAdmin()}">
+                        <a class="btn btn-outline-danger btn-sm" data-target="#modal-soft-delete"
+                           data-toggle="modal"
+                           th:attr="data-target='#modal-soft-delete'+${user.id}"
+                           th:href="${'user/delete/' + user.id}">Delete
+                        </a>
+                    </td>
+                    <td th:if="${isAdminSigned and user.isAdmin()}"></td>
+
+                    <!--modal for delete confirmation-->
+                    <div class="modal" th:id="modal-soft-delete+${user.id }">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title text-danger">Delete Confirmation</h3>
+                                    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p th:text="${'Are you sure you want to delete user: &nbsp&nbsp'+user.name+'?'}"></p>
+                                    <small>After this action, the tasks will be retained, but without the owner.</small>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-outline-secondary" data-dismiss="modal" type="button">
+                                        Cancel
+                                    </button>
+                                    <a th:href="${'/user/delete/' + user.id}">
+                                        <span class="btn btn-danger">Delete</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end of modal for delete confirmation-->
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <!--/*/ <th:block th:include="fragments/footer :: footer"></th:block> /*/-->
+</footer>
+
+<!--remain scroll position after redirect-->
+<script src="js/main.js"></script>
+
+</body>
+</html>
